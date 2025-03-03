@@ -1,0 +1,94 @@
+@baseUrl = http://127.0.0.1/api
+@email = test@example.com
+@password = password
+
+### 新規ユーザー登録
+# @name register
+POST {{baseUrl}}/register/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "test",
+  "email": "{{email}}",
+  "password": "{{password}}",
+  "password_confirmation": "{{password}}"
+}
+
+### registerで取得したtokenを使用してログアウト
+# @name logout_after_register
+POST {{baseUrl}}/logout/
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{register.response.body.data.token}}
+
+### 登録済みユーザーでログイン
+# @name login
+POST {{baseUrl}}/login/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### loginで取得したtokenを使用してログアウト
+# @name logout_after_login
+POST {{baseUrl}}/logout/
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+### 認証チェック
+# @name authentication
+GET {{baseUrl}}/authentication/
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+### loginで取得したtokenを使用してTodo一覧を取得
+# @name get_todos
+GET {{baseUrl}}/todos/
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+### loginで取得したtokenを使用してTodoを作成
+# @name create_todo
+POST {{baseUrl}}/todos/
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+{
+  "user_id": 14,
+  "title": "こんにちは",
+  "content": "挨拶です。"
+}
+
+### loginで取得したtokenを使用してTodoを取得
+# @name get_todo
+GET {{baseUrl}}/todos/1/
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+### loginで取得したtokenを使用してTodoを更新
+# @name update_todo
+PUT {{baseUrl}}/todos/4/
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+{
+  "title": "こんにちははははは",
+  "content": "挨拶です。",
+}
+
+### loginで取得したtokenを使用してTodoを削除
+# @name delete_todo
+DELETE {{baseUrl}}/todos/6/
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data.token}}

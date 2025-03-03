@@ -1,0 +1,30 @@
+Project TodoProject {
+  database_type: 'MySQL'
+  Note: '''
+    ## TodoProject
+    ### 参考情報
+    - [テーブル設計情報](https://demo.com)
+  '''
+}
+
+Table users {
+  Note: 'ユーザー情報管理'
+  id int [pk, increment]
+  name varchar(255) [not null, note: 'ユーザー名']
+  email varchar(255) [not null, note: 'メールアドレス']
+  password varchar(255) [not null, note: 'パスワード']
+  created_at datetime [default: `CURRENT_TIMESTAMP`, note: '作成日時']
+  updated_at datetime [default: `CURRENT_TIMESTAMP`, note: '更新日時']
+  deleted_at datetime [note: '削除日時']
+ }
+
+Table todos {
+  Note: 'タスク情報管理'
+  id int [pk, increment]
+  title varchar(50) [not null, note: 'タイトル']
+  content varchar(255) [not null, note: '内容']
+  user_id int [not null, note: 'ユーザーID', ref: > users.id]
+  created_at datetime [default: `CURRENT_TIMESTAMP`, note: '作成日時']
+  updated_at datetime [default: `CURRENT_TIMESTAMP`, note: '更新日時']
+  deleted_at datetime [note: '削除日時']
+}

@@ -1,0 +1,467 @@
+openapi: 3.0.0
+info:
+  title: API description
+  description: ""
+  version: "1.0"
+  contact: {}
+tags:
+  - name: Auth
+    description: 認証関連
+  - name: Todo
+    description: タスク関連
+servers:
+  - url: http://localhost
+paths:
+  /api/register:
+    post:
+      operationId: AuthController_register
+      tags: [Auth]
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpUserDto"
+      responses:
+        "200":
+          description: ユーザー登録完了
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignUpResponseDto"
+  /api/login:
+    post:
+      operationId: LoginController_login
+      tags: [Auth]
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInUserDto"
+      responses:
+        "200":
+          description: ログイン完了
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponseDto"
+  /api/logout:
+    post:
+      operationId: LoginController_logout
+      tags: [Auth]
+      parameters: []
+      responses:
+        "200":
+          description: ログアウト完了
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogoutResponseDto"
+        "401":
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+  /api/todos:
+    get:
+      operationId: TodoController_index
+      tags: [Todo]
+      parameters: []
+      responses:
+        "200":
+          description: タスク一覧取得完了
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodoListResponseDto"
+        "401":
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+    post:
+      operationId: TodoController_store
+      tags: [Todo]
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodoStoreRequestDto"
+      responses:
+        "200":
+          description: タスク作成完了
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodoEntity"
+        "401":
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+  /api/todos/{id}:
+    get:
+      operationId: TodoController_show
+      tags: [Todo]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: タスク取得完了
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodoEntity"
+        "401":
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+    put:
+      operationId: TodoController_update
+      tags: [Todo]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodoUpdateRequestDto"
+      responses:
+        "200":
+          description: タスク更新完了
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodoEntity"
+        "401":
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "404":
+          description: タスクが見つからない
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+    delete:
+      operationId: TodoController_destroy
+      tags: [Todo]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: タスク削除完了
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodoDeleteResponseDto"
+        "401":
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "404":
+          description: タスクが見つからない
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    SignUpUserDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: ユーザー1
+        email:
+          type: string
+          example: user1@test.com
+        password:
+          type: string
+          example: password
+        password_confirmation:
+          type: string
+          example: password
+    SignInUserDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user1@test.com
+        password:
+          type: string
+          example: password
+      required:
+        - email
+        - password
+    UserEntity:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: ユーザー1
+          minLength: 2
+          maxLength: 25
+        email:
+          type: string
+          example: user1@test.com
+          maxLength: 255
+        email_verified_at:
+          format: date-time
+          type: string
+          example: "2022-10-28T08:38:14.237Z"
+        password:
+          type: string
+          example: password
+        remember_token:
+          type: string
+          example: remember_token
+        createdAt:
+          format: date-time
+          type: string
+          example: "2022-10-28T08:38:14.237Z"
+        updatedAt:
+          format: date-time
+          type: string
+          example: "2022-10-28T08:38:14.237Z"
+      required:
+        - id
+        - name
+        - email
+        - password
+        - createdAt
+        - updatedAt
+    SignUpResponseDto:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            user:
+              $ref: "#/components/schemas/UserEntity"
+            token:
+              type: string
+              example: 3|gp3F2vTrNwdY5AgZVdkPfk22xHErjwmGpRT93yEO0c026938
+        message:
+          type: string
+          example: User registered successfully.
+      required:
+        - success
+        - data
+        - message
+    LoginResponseDto:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            user:
+              $ref: "#/components/schemas/UserEntity"
+            token:
+              type: string
+              example: 3|gp3F2vTrNwdY5AgZVdkPfk22xHErjwmGpRT93yEO0c026938
+        message:
+          type: string
+          example: User login successfully.
+      required:
+        - success
+        - data
+        - message
+    LogoutResponseDto:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          example: []
+        message:
+          type: string
+          example: User logout successfully.
+      required:
+        - success
+        - data
+        - message
+    TodoEntity:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        user_id:
+          type: number
+          example: 1
+        title:
+          type: string
+          example: タスク1
+        content:
+          type: string
+          example: タスクの内容
+        is_completed:
+          type: boolean
+          example: false
+        deleted_at:
+          type: string
+          example: "2022-10-28T08:38:14.237Z"
+        created_at:
+          format: date-time
+          type: string
+          example: "2022-10-28T08:38:14.237Z"
+        updated_at:
+          format: date-time
+          type: string
+          example: "2022-10-28T08:38:14.237Z"
+      required:
+        - id
+        - user_id
+        - title
+        - content
+        - is_completed
+    TodoListResponseDto:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          example:
+            [
+              {
+                "id": 1,
+                "user_id": 1,
+                "title": "タスク1",
+                "content": "タスクの内容",
+                "is_completed": false,
+              },
+            ]
+        message:
+          type: string
+          example: Todos fetched successfully.
+      required:
+        - success
+        - data
+        - message
+    TodoStoreRequestDto:
+      type: object
+      properties:
+        user_id:
+          type: number
+          example: 1
+        title:
+          type: string
+          example: タスク1
+        content:
+          type: string
+          example: タスクの内容
+      required:
+        - user_id
+        - title
+        - content
+    TodoUpdateRequestDto:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        title:
+          type: string
+          example: タスク1
+        content:
+          type: string
+          example: タスクの内容1
+        # is_completed:
+        #   type: boolean
+        #   example: true
+    TodoDeleteResponseDto:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            user_id:
+              type: number
+              example: 1
+            title:
+              type: string
+              example: タスク1
+            content:
+              type: string
+              example: タスクの内容
+            is_completed:
+              type: boolean
+              example: false
+            deleted_at:
+              type: string
+              example: "2022-10-28T08:38:14.237Z"
+        message:
+          type: string
+          example: Todo deleted successfully.
+      required:
+        - success
+        - data
+        - message
+    ErrorDto:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Error message
+      required:
+        - success
+        - message
