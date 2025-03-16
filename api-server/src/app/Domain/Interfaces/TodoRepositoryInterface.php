@@ -11,4 +11,5 @@ interface TodoRepositoryInterface
   public function store(EntityTodo $todo): EntityTodo;
   public function update(EntityTodo $todo): EntityTodo;
   public function delete(EntityTodo $todo): EntityTodo;
+  public function deleteAll(): int;
 }
