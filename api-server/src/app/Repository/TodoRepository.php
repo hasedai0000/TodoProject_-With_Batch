@@ -80,4 +80,14 @@ class TodoRepository implements TodoRepositoryInterface
       $eloquentTodo->is_completed,
     );
   }
+
+  /**
+   * Delete all todos.
+   *
+   * @return int Number of deleted records
+   */
+  public function deleteAll(): int
+  {
+    return Todo::query()->delete();
+  }
 }

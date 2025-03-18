@@ -92,3 +92,10 @@ DELETE {{baseUrl}}/todos/6/
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{login.response.body.data.token}}
+
+### loginで取得したtokenを使用して全てのTodoを削除
+# @name delete_all_todos
+DELETE {{baseUrl}}/todos/
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data.token}}

@@ -65,4 +65,12 @@ class TodoService
     }
     return null;
   }
+
+  /**
+   * Delete all todos.
+   */
+  public function deleteAllTodos(): int
+  {
+    return $this->repository->deleteAll();
+  }
 }
